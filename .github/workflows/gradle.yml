@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Java CI with Gradle (No Wrapper)
 
 on:
   push:
@@ -21,22 +21,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle with Caching
+      - name: Setup Gradle (without Wrapper)
         uses: gradle/actions/setup-gradle@v4
         with:
-          cache-read-only: false
+          gradle-version: '8.9' # Install Gradle manually
 
-      - name: Run Checkstyle (Linting)
-        run: ./gradlew checkstyleMain
-
-      - name: Run PMD (Static Code Analysis)
-        run: ./gradlew pmdMain
-
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
+      - name: Build with Gradle
+        run: gradle build
 
       - name: Run Tests
-        run: ./gradlew test
+        run: gradle test
 
   dependency-submission:
     runs-on: ubuntu-latest
@@ -51,6 +45,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Setup Gradle (without Wrapper)
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9' # Ensure Gradle is installed
 
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@v4
